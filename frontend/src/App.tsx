@@ -18,7 +18,6 @@ import { useRecentActions } from './hooks/useRecentActions';
 import { useLocalNotifications } from './hooks/useLocalNotifications';
 import './styles/theme.css';
 import './styles/responsive.css';
-import './styles/responsive.css';
 
 // Squelette minimal : après connexion, router vers le tableau de bord
 // correspondant au rôle renvoyé par l'API (Caissier / Gestionnaire / Direction),

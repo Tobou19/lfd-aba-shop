@@ -2,9 +2,27 @@ import { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'auto';
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useTheme = () => {
   const [theme, setTheme] = useState<Theme>(() => {
-    const saved = localStorage.getItem('aba_theme');
+    const saved = safeLocalStorage.getItem('aba_theme');
     return (saved as Theme) || 'auto';
   });
 
@@ -39,7 +57,7 @@ export const useTheme = () => {
 
   const changeTheme = (newTheme: Theme) => {
     setTheme(newTheme);
-    localStorage.setItem('aba_theme', newTheme);
+    safeLocalStorage.setItem('aba_theme', newTheme);
   };
 
   return { theme, effectiveTheme, changeTheme };

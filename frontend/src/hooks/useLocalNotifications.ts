@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 interface LocalNotification {
   id: string;
@@ -12,17 +12,47 @@ interface LocalNotification {
 const STORAGE_KEY = 'aba_notifications';
 const MAX_NOTIFICATIONS = 50;
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useLocalNotifications = () => {
   const [notifications, setNotifications] = useState<LocalNotification[]>([]);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
     if (stored) {
-      setNotifications(JSON.parse(stored));
+      try {
+        setNotifications(JSON.parse(stored));
+      } catch (e) {
+        console.error('Error parsing notifications:', e);
+        setNotifications([]);
+      }
     }
   }, []);
 
-  const addNotification = (notification: Omit<LocalNotification, 'id' | 'timestamp' | 'read'>) => {
+  const addNotification = useCallback((notification: Omit<LocalNotification, 'id' | 'timestamp' | 'read'>) => {
     const newNotification: LocalNotification = {
       ...notification,
       id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
@@ -32,51 +62,62 @@ export const useLocalNotifications = () => {
 
     const updated = [newNotification, ...notifications].slice(0, MAX_NOTIFICATIONS);
     setNotifications(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
 
     // Browser notification if permitted
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(notification.title, {
-        body: notification.message,
-        icon: '/icons/icon-192.svg',
-      });
+      try {
+        new Notification(notification.title, {
+          body: notification.message,
+          icon: '/icons/icon-192.svg',
+        });
+      } catch (e) {
+        console.error('Browser notification error:', e);
+      }
     }
-  };
+  }, [notifications]);
 
-  const markAsRead = (id: string) => {
+  const markAsRead = useCallback((id: string) => {
     const updated = notifications.map(n => 
       n.id === id ? { ...n, read: true } : n
     );
     setNotifications(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  }, [notifications]);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     const updated = notifications.map(n => ({ ...n, read: true }));
     setNotifications(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  }, [notifications]);
 
-  const removeNotification = (id: string) => {
+  const removeNotification = useCallback((id: string) => {
     const updated = notifications.filter(n => n.id !== id);
     setNotifications(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  };
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  }, [notifications]);
 
-  const clearAll = () => {
+  const clearAll = useCallback(() => {
     setNotifications([]);
-    localStorage.removeItem(STORAGE_KEY);
-  };
+    safeLocalStorage.removeItem(STORAGE_KEY);
+  }, []);
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = useMemo(() => {
+    return notifications.filter(n => !n.read).length;
+  }, [notifications]);
 
-  const requestPermission = async () => {
+  const requestPermission = useCallback(async () => {
     if ('Notification' in window) {
-      const permission = await Notification.requestPermission();
-      return permission === 'granted';
+      try {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+      } catch (e) {
+        console.error('Notification permission error:', e);
+        return false;
+      }
     }
     return false;
-  };
+  }, []);
 
   return {
     notifications,

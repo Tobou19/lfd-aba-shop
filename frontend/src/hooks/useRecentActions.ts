@@ -9,17 +9,47 @@ interface RecentAction {
 const STORAGE_KEY = 'aba_recent_actions';
 const MAX_RECENT_ACTIONS = 20;
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useRecentActions = () => {
   const getRecentActions = (): RecentAction[] => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
     
-    const actions = JSON.parse(stored);
-    return actions
-      .sort((a: RecentAction, b: RecentAction) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      )
-      .slice(0, MAX_RECENT_ACTIONS);
+    try {
+      const actions = JSON.parse(stored);
+      return actions
+        .sort((a: RecentAction, b: RecentAction) => 
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        )
+        .slice(0, MAX_RECENT_ACTIONS);
+    } catch (e) {
+      console.error('Error parsing recent actions:', e);
+      return [];
+    }
   };
 
   const addRecentAction = (action: Omit<RecentAction, 'id' | 'timestamp'>) => {
@@ -38,11 +68,11 @@ export const useRecentActions = () => {
     filtered.unshift(newAction);
     const trimmed = filtered.slice(0, MAX_RECENT_ACTIONS);
     
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
   };
 
   const clearRecentActions = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   const getActionsByType = (type: RecentAction['type']): RecentAction[] => {

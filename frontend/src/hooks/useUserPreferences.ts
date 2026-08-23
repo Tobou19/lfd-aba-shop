@@ -14,17 +14,47 @@ const defaultPreferences: UserPreferences = {
   fontSize: 'medium',
 };
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useUserPreferences = () => {
   const getPreferences = (): UserPreferences => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
     if (!stored) {
       return defaultPreferences;
     }
-    return { ...defaultPreferences, ...JSON.parse(stored) };
+    try {
+      return { ...defaultPreferences, ...JSON.parse(stored) };
+    } catch (e) {
+      console.error('Error parsing preferences:', e);
+      return defaultPreferences;
+    }
   };
 
   const savePreferences = (preferences: UserPreferences) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(preferences));
   };
 
   const updatePreference = <K extends keyof UserPreferences>(
@@ -37,7 +67,7 @@ export const useUserPreferences = () => {
   };
 
   const resetPreferences = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   return {

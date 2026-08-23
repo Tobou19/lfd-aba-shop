@@ -8,10 +8,41 @@ interface QuickNote {
 
 const STORAGE_KEY = 'aba_quick_notes';
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useQuickNotes = () => {
   const getNotes = (): QuickNote[] => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing notes:', e);
+      return [];
+    }
   };
 
   const addNote = (content: string, color: string = '#FFFF00') => {
@@ -24,7 +55,7 @@ export const useQuickNotes = () => {
       color,
     };
     notes.unshift(newNote);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
   };
 
   const updateNote = (id: string, content: string, color?: string) => {
@@ -37,17 +68,17 @@ export const useQuickNotes = () => {
         updatedAt: new Date().toISOString(),
         ...(color && { color }),
       };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+      safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
     }
   };
 
   const deleteNote = (id: string) => {
     const notes = getNotes().filter(n => n.id !== id);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
   };
 
   const clearAllNotes = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   const searchNotes = (query: string): QuickNote[] => {

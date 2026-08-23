@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useFavorites } from '../hooks/useFavorites';
 
 interface FavoriteButtonProps {
@@ -14,12 +14,12 @@ export const FavoriteButton = ({ id, type, name, details }: FavoriteButtonProps)
 
   useEffect(() => {
     setIsFav(isFavorite(id, type));
-  }, [id, type, isFavorite]);
+  }, [id, type]); // Retiré isFavorite des dépendances
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     const newState = toggleFavorite({ id, type, name, details });
     setIsFav(newState);
-  };
+  }, [id, type, name, details, toggleFavorite]);
 
   return (
     <button

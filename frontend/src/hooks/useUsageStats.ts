@@ -8,9 +8,34 @@ interface UsageStats {
 
 const STORAGE_KEY = 'aba_usage_stats';
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useUsageStats = () => {
   const getStats = (): UsageStats => {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
     if (!stored) {
       return {
         totalOrders: 0,
@@ -20,11 +45,22 @@ export const useUsageStats = () => {
         offlineTime: 0,
       };
     }
-    return JSON.parse(stored);
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing usage stats:', e);
+      return {
+        totalOrders: 0,
+        totalCustomers: 0,
+        lastLogin: null,
+        appOpens: 0,
+        offlineTime: 0,
+      };
+    }
   };
 
   const saveStats = (stats: UsageStats) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
   };
 
   const incrementAppOpens = () => {
@@ -53,7 +89,7 @@ export const useUsageStats = () => {
   };
 
   const resetStats = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   // Auto-increment app opens on mount

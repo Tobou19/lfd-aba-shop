@@ -11,10 +11,41 @@ interface UserSession {
 const STORAGE_KEY = 'aba_sessions';
 const MAX_SESSIONS = 5;
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useMultiSession = () => {
   const getSessions = (): UserSession[] => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing sessions:', e);
+      return [];
+    }
   };
 
   const addSession = (session: Omit<UserSession, 'id' | 'loginTime' | 'lastActivity'>) => {
@@ -36,7 +67,7 @@ export const useMultiSession = () => {
     // Keep only MAX_SESSIONS most recent
     const trimmed = filtered.slice(0, MAX_SESSIONS);
     
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed));
     return newSession;
   };
 
@@ -45,13 +76,13 @@ export const useMultiSession = () => {
     const index = sessions.findIndex(s => s.id === sessionId);
     if (index !== -1) {
       sessions[index].lastActivity = new Date().toISOString();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+      safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
     }
   };
 
   const removeSession = (sessionId: string) => {
     const sessions = getSessions().filter(s => s.id !== sessionId);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
   };
 
   const getCurrentSession = (deviceId: string): UserSession | undefined => {
@@ -60,7 +91,7 @@ export const useMultiSession = () => {
   };
 
   const clearAllSessions = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   const getActiveSessions = (): UserSession[] => {
@@ -72,10 +103,10 @@ export const useMultiSession = () => {
   };
 
   const getCurrentDeviceId = (): string => {
-    let deviceId = localStorage.getItem('aba_device_id');
+    let deviceId = safeLocalStorage.getItem('aba_device_id');
     if (!deviceId) {
       deviceId = `device-${Math.random().toString(36).substring(2, 11)}`;
-      localStorage.setItem('aba_device_id', deviceId);
+      safeLocalStorage.setItem('aba_device_id', deviceId);
     }
     return deviceId;
   };

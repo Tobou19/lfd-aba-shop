@@ -8,10 +8,41 @@ interface FavoriteItem {
 
 const STORAGE_KEY = 'aba_favorites';
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const useFavorites = () => {
   const getFavorites = (): FavoriteItem[] => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const stored = safeLocalStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing favorites:', e);
+      return [];
+    }
   };
 
   const addFavorite = (item: Omit<FavoriteItem, 'addedAt'>) => {
@@ -24,7 +55,7 @@ export const useFavorites = () => {
         addedAt: new Date().toISOString(),
       };
       favorites.push(newFavorite);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+      safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
       return true;
     }
     return false;
@@ -32,7 +63,7 @@ export const useFavorites = () => {
 
   const removeFavorite = (id: string, type: string) => {
     const favorites = getFavorites().filter(f => !(f.id === id && f.type === type));
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+    safeLocalStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
   };
 
   const isFavorite = (id: string, type: string): boolean => {
@@ -55,7 +86,7 @@ export const useFavorites = () => {
   };
 
   const clearFavorites = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    safeLocalStorage.removeItem(STORAGE_KEY);
   };
 
   return {
