@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'Intégration des Images LFD-Services</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #1E5C48;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1E5C48;
+            margin-top: 30px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #2196F3;
+            margin-top: 20px;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .checklist-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #17a2b8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .image-mapping {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .step {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background: #1E5C48;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>📋 Guide d'Intégration des Images LFD-Services</h1>
+    
+    <div class="info">
+        <strong>Guide Final d'Intégration des Images LFD-Services</strong><br>
+        Version: 1.0 | Date: 24 août 2026
+    </div>
+
+    <h2>📋 Résumé</h2>
+    <p>L'application LFD ABA Shop est maintenant configurée pour afficher:</p>
+    <ul>
+        <li>✅ Le logo LFD-Services dans l'en-tête</li>
+        <li>✅ Le QR code de la boutique sur la page de connexion et tableau de bord</li>
+        <li>✅ La photo du centre sur le tableau de bord</li>
+    </ul>
+    <p>Des placeholders SVG sont déjà en place et fonctionnels. Pour utiliser vos vraies images, suivez ce guide.</p>
+
+    <h2>🎯 Vos Images à Intégrer</h2>
+    
+    <div class="image-mapping">
+        <h3>Image 1: QR Code de la Boutique</h3>
+        <ul>
+            <li><strong>Contenu:</strong> QR code avec logo LFD au centre</li>
+            <li><strong>Nom du fichier cible:</strong> <code>qr-code-shop.png</code></li>
+            <li><strong>Emplacement:</strong> <code>frontend/public/images/qr-code-shop.png</code></li>
+        </ul>
+
+        <h3>Image 2: Logo LFD-Services</h3>
+        <ul>
+            <li><strong>Contenu:</strong> Logo circulaire avec texte "LFD-Services"</li>
+            <li><strong>Nom du fichier cible:</strong> <code>lfd-logo.png</code></li>
+            <li><strong>Emplacement:</strong> <code>frontend/public/images/lfd-logo.png</code></li>
+        </ul>
+
+        <h3>Image 3: Photo du Centre</h3>
+        <ul>
+            <li><strong>Contenu:</strong> Photo du bâtiment LFD-Services</li>
+            <li><strong>Nom du fichier cible:</strong> <code>center-photo.jpg</code></li>
+            <li><strong>Emplacement:</strong> <code>frontend/public/images/center-photo.jpg</code></li>
+        </ul>
+    </div>
+
+    <h2>📝 Étapes d'Intégration</h2>
+
+    <div class="step">
+        <span class="step-number">1</span>
+        <strong>Sauvegarder Vos Images</strong>
+        <ol>
+            <li>Ouvrez vos images (celles fournies dans les métadonnées)</li>
+            <li>Sauvegardez-les avec les noms suivants:
+                <ul>
+                    <li>Image 1 → <code>qr-code-shop.png</code></li>
+                    <li>Image 2 → <code>lfd-logo.png</code></li>
+                    <li>Image 3 → <code>center-photo.jpg</code></li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <span class="step-number">2</span>
+        <strong>Placer les Fichiers</strong>
+        <p>Copiez les fichiers dans ce dossier:</p>
+        <pre><code>C:\Users\LFD SERVICE\Downloads\LFD_ABA_SHOP_MVP_Squelette\lfd-aba-shop\frontend\public\images\</code></pre>
+    </div>
+
+    <div class="step">
+        <span class="step-number">3</span>
+        <strong>Redémarrer le Serveur</strong>
+        <pre><code>cd frontend
+npm run dev</code></pre>
+    </div>
+
+    <div class="step">
+        <span class="step-number">4</span>
+        <strong>Vérifier l'Intégration</strong>
+        <ol>
+            <li>Ouvrez <code>http://localhost:5173</code></li>
+            <li>Vérifiez que:
+                <ul>
+                    <li>Le logo LFD-Services apparaît dans l'en-tête</li>
+                    <li>Le QR code apparaît sur la page de connexion</li>
+                    <li>La photo du centre apparaît sur le tableau de bord</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="step">
+        <span class="step-number">5</span>
+        <strong>Test de Build</strong>
+        <pre><code>npm run build</code></pre>
+        <p>Vérifiez que le build réussit.</p>
+    </div>
+
+    <h2>🔧 Comportement du Système</h2>
+
+    <h3>Avec Vos Images (PNG/JPG)</h3>
+    <ul>
+        <li>Les composants utilisent les fichiers PNG/JPG</li>
+        <li>Qualité optimale</li>
+        <li>Compatibilité maximale</li>
+    </ul>
+
+    <h3>Sans Vos Images (Fallback)</h3>
+    <ul>
+        <li>Les composants utilisent automatiquement les SVG placeholders</li>
+        <li>L'application fonctionne normalement</li>
+        <li>Aucune erreur ou crash</li>
+    </ul>
+
+    <h3>Fallback Intelligent</h3>
+    <ul>
+        <li>Chaque composant a un <code>onError</code> qui bascule sur SVG si PNG n'existe pas</li>
+        <li>Transparence des placeholders pour éviter les visuels vides</li>
+    </ul>
+
+    <h2>📁 Structure des Fichiers</h2>
+    <pre><code>frontend/public/images/
+├── INSTRUCTIONS.md           # Instructions générales
+├── README_IMAGES.md          # Guide de remplacement
+├── lfd-logo.svg            # Placeholder logo (vert)
+├── lfd-logo.png            # [À AJOUTER] Votre vrai logo
+├── qr-code-shop.svg        # Placeholder QR code
+├── qr-code-shop.png        # [À AJOUTER] Votre vrai QR code
+├── center-photo.svg        # Placeholder bâtiment
+└── center-photo.jpg        # [À AJOUTER] Votre vraie photo</code></pre>
+
+    <h2>🎨 Composants Concernés</h2>
+
+    <h3>BrandHeader.tsx</h3>
+    <ul>
+        <li><strong>Affiche:</strong> Logo LFD-Services</li>
+        <li><strong>Utilisation:</strong> En-tête de toutes les pages</li>
+        <li><strong>Fallback:</strong> SVG si PNG absent</li>
+    </ul>
+
+    <h3>BrandAssets.tsx</h3>
+    <ul>
+        <li><strong>Affiche:</strong> QR code + Photo du centre</li>
+        <li><strong>Utilisation:</strong> Page de connexion (QR only) + Tableau de bord (QR + photo)</li>
+        <li><strong>Fallback:</strong> SVG si PNG/JPG absent</li>
+    </ul>
+
+    <h3>App.tsx</h3>
+    <ul>
+        <li><strong>Intégration:</strong> BrandHeader + BrandAssets</li>
+        <li><strong>Pages:</strong> Login et Dashboard</li>
+    </ul>
+
+    <h3>index.html</h3>
+    <ul>
+        <li><strong>Favicon:</strong> Logo LFD-Services</li>
+        <li><strong>Apple Touch Icon:</strong> Logo LFD-Services</li>
+    </ul>
+
+    <h2>✅ Checklist d'Intégration</h2>
+    
+    <div class="checklist-item">
+        <input type="checkbox"> Sauvegarder Image 1 comme <code>qr-code-shop.png</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Sauvegarder Image 2 comme <code>lfd-logo.png</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Sauvegarder Image 3 comme <code>center-photo.jpg</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Placer les fichiers dans <code>frontend/public/images/</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Redémarrer le serveur de développement
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Vérifier l'affichage sur <code>http://localhost:5173</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Tester le build avec <code>npm run build</code>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox"> Vérifier que les images s'affichent correctement
+    </div>
+
+    <h2>🚀 Après l'Intégration</h2>
+
+    <h3>Vérification Visuelle</h3>
+
+    <h4>1. Page de Connexion</h4>
+    <ul>
+        <li>✅ Logo LFD-Services visible en haut</li>
+        <li>✅ QR code visible en bas</li>
+    </ul>
+
+    <h4>2. Tableau de Bord</h4>
+    <ul>
+        <li>✅ Logo LFD-Services visible en haut</li>
+        <li>✅ QR code visible en bas</li>
+        <li>✅ Photo du centre visible au milieu</li>
+    </ul>
+
+    <h4>3. Favicon</h4>
+    <ul>
+        <li>✅ Logo LFD-Services visible dans l'onglet du navigateur</li>
+    </ul>
+
+    <h3>Déploiement</h3>
+    <p>Après vérification locale:</p>
+    <ol>
+        <li>Committez vos images (si vous voulez les versionner)</li>
+        <li>Ou gardez-les locales (recommandé pour les images de marque)</li>
+        <li>Déployez normalement</li>
+    </ol>
+
+    <h2>💡 Conseils</h2>
+
+    <h3>Formats Recommandés</h3>
+    <ul>
+        <li><strong>Logo:</strong> PNG avec fond transparent ou SVG</li>
+        <li><strong>QR Code:</strong> PNG (compatible avec tous les scanners)</li>
+        <li><strong>Photo:</strong> JPG (compression optimale) ou PNG (qualité maximale)</li>
+    </ul>
+
+    <h3>Tailles Recommandées</h3>
+    <ul>
+        <li><strong>Logo:</strong> 200x200px minimum, 512x512px optimal</li>
+        <li><strong>QR Code:</strong> 300x300px minimum, 512x512px optimal</li>
+        <li><strong>Photo:</strong> 800x600px minimum, 1920x1080px optimal</li>
+    </ul>
+
+    <h3>Compression</h3>
+    <ul>
+        <li>Utilisez des outils comme TinyPNG pour compresser les PNG</li>
+        <li>JPG de qualité 80-90% pour les photos</li>
+        <li>Évitez les fichiers trop volumineux (>2MB)</li>
+    </ul>
+
+    <h2>🆘 Dépannage</h2>
+
+    <h3>Images Ne S'affichent Pas</h3>
+    <p><strong>Problème:</strong> Les placeholders SVG sont visibles au lieu de vos images</p>
+    <p><strong>Solution:</strong></p>
+    <ol>
+        <li>Vérifiez que les fichiers sont dans le bon dossier</li>
+        <li>Vérifiez les noms de fichiers (exactement comme indiqué)</li>
+        <li>Redémarrez le serveur de développement</li>
+        <li>Videz le cache du navigateur (Ctrl+F5)</li>
+    </ol>
+
+    <h3>Build Échoue</h3>
+    <p><strong>Problème:</strong> Erreur lors du build</p>
+    <p><strong>Solution:</strong></p>
+    <ol>
+        <li>Vérifiez que les fichiers existent</li>
+        <li>Si vous n'avez pas encore ajouté vos images, utilisez les SVG placeholders</li>
+        <li>Le build devrait fonctionner avec les SVG placeholders</li>
+    </ol>
+
+    <h3>Images Distordues</h3>
+    <p><strong>Problème:</strong> Les images apparaissent étirées ou déformées</p>
+    <p><strong>Solution:</strong></p>
+    <ol>
+        <li>Utilisez des images aux dimensions recommandées</li>
+        <li>Le composant utilise <code>objectFit: contain</code> pour préserver le ratio</li>
+        <li>Recadrez ou redimensionnez vos images aux bonnes dimensions</li>
+    </ol>
+
+    <h2>📞 Support</h2>
+    <p>Pour toute question sur l'intégration des images:</p>
+    <ul>
+        <li>Consultez <code>frontend/public/images/INSTRUCTIONS.md</code></li>
+        <li>Consultez <code>frontend/public/images/README_IMAGES.md</code></li>
+        <li>Contactez le support technique</li>
+    </ul>
+
+    <div class="success">
+        <strong>🎉 Félicitations !</strong><br>
+        Vous avez maintenant un système d'images de marque intégré dans LFD ABA Shop !
+    </div>
+
+    <div class="warning no-print">
+        <strong>💡 Pour sauvegarder en PDF:</strong><br>
+        Appuyez sur Ctrl+P (ou Cmd+P sur Mac) et sélectionnez "Enregistrer en PDF" comme destination.
+    </div>
+</body>
+</html>
