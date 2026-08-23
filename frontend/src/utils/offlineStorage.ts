@@ -26,22 +26,53 @@ const STORAGE_KEYS = {
   USER_SESSION: 'aba_user_session',
 };
 
+const safeLocalStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+  removeItem: (key: string): void => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error('localStorage error:', e);
+    }
+  },
+};
+
 export const offlineStorage = {
   // Gestion des commandes hors connexion
   saveOrder: (order: OfflineOrder) => {
     const orders = offlineStorage.getOrders();
     orders.push(order);
-    localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
+    safeLocalStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
   },
 
   getOrders: (): OfflineOrder[] => {
-    const stored = localStorage.getItem(STORAGE_KEYS.ORDERS);
-    return stored ? JSON.parse(stored) : [];
+    const stored = safeLocalStorage.getItem(STORAGE_KEYS.ORDERS);
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing orders:', e);
+      return [];
+    }
   },
 
   removeOrder: (orderId: string) => {
     const orders = offlineStorage.getOrders().filter(o => o.id !== orderId);
-    localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
+    safeLocalStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
   },
 
   updateOrderStatus: (orderId: string, status: OfflineOrder['status']) => {
@@ -49,7 +80,7 @@ export const offlineStorage = {
     const order = orders.find(o => o.id === orderId);
     if (order) {
       order.status = status;
-      localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
+      safeLocalStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(orders));
     }
   },
 
@@ -57,70 +88,92 @@ export const offlineStorage = {
   saveCustomer: (customer: OfflineCustomer) => {
     const customers = offlineStorage.getCustomers();
     customers.push(customer);
-    localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(customers));
+    safeLocalStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(customers));
   },
 
   getCustomers: (): OfflineCustomer[] => {
-    const stored = localStorage.getItem(STORAGE_KEYS.CUSTOMERS);
-    return stored ? JSON.parse(stored) : [];
+    const stored = safeLocalStorage.getItem(STORAGE_KEYS.CUSTOMERS);
+    if (!stored) return [];
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing customers:', e);
+      return [];
+    }
   },
 
   // Cache des produits pour consultation hors connexion
   cacheProducts: (products: any[]) => {
-    localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify({
+    safeLocalStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify({
       data: products,
       timestamp: Date.now(),
     }));
   },
 
   getCachedProducts: () => {
-    const stored = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+    const stored = safeLocalStorage.getItem(STORAGE_KEYS.PRODUCTS);
     if (!stored) return null;
     
-    const cached = JSON.parse(stored);
-    // Cache valide pendant 24h
-    if (Date.now() - cached.timestamp > 24 * 60 * 60 * 1000) {
-      localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+    try {
+      const cached = JSON.parse(stored);
+      // Cache valide pendant 24h
+      if (Date.now() - cached.timestamp > 24 * 60 * 60 * 1000) {
+        safeLocalStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+        return null;
+      }
+      
+      return cached.data;
+    } catch (e) {
+      console.error('Error parsing cached products:', e);
       return null;
     }
-    
-    return cached.data;
   },
 
   // Cache des centres
   cacheCenters: (centers: any[]) => {
-    localStorage.setItem(STORAGE_KEYS.CENTERS, JSON.stringify({
+    safeLocalStorage.setItem(STORAGE_KEYS.CENTERS, JSON.stringify({
       data: centers,
       timestamp: Date.now(),
     }));
   },
 
   getCachedCenters: () => {
-    const stored = localStorage.getItem(STORAGE_KEYS.CENTERS);
+    const stored = safeLocalStorage.getItem(STORAGE_KEYS.CENTERS);
     if (!stored) return null;
     
-    const cached = JSON.parse(stored);
-    // Cache valide pendant 7 jours
-    if (Date.now() - cached.timestamp > 7 * 24 * 60 * 60 * 1000) {
-      localStorage.removeItem(STORAGE_KEYS.CENTERS);
+    try {
+      const cached = JSON.parse(stored);
+      // Cache valide pendant 7 jours
+      if (Date.now() - cached.timestamp > 7 * 24 * 60 * 60 * 1000) {
+        safeLocalStorage.removeItem(STORAGE_KEYS.CENTERS);
+        return null;
+      }
+      
+      return cached.data;
+    } catch (e) {
+      console.error('Error parsing cached centers:', e);
       return null;
     }
-    
-    return cached.data;
   },
 
   // Session utilisateur
   saveUserSession: (session: any) => {
-    localStorage.setItem(STORAGE_KEYS.USER_SESSION, JSON.stringify(session));
+    safeLocalStorage.setItem(STORAGE_KEYS.USER_SESSION, JSON.stringify(session));
   },
 
   getUserSession: () => {
-    const stored = localStorage.getItem(STORAGE_KEYS.USER_SESSION);
-    return stored ? JSON.parse(stored) : null;
+    const stored = safeLocalStorage.getItem(STORAGE_KEYS.USER_SESSION);
+    if (!stored) return null;
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Error parsing user session:', e);
+      return null;
+    }
   },
 
   clearUserSession: () => {
-    localStorage.removeItem(STORAGE_KEYS.USER_SESSION);
+    safeLocalStorage.removeItem(STORAGE_KEYS.USER_SESSION);
   },
 
   // Nettoyage automatique des données obsolètes
@@ -136,7 +189,7 @@ export const offlineStorage = {
       }
       return true;
     });
-    localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(validOrders));
+    safeLocalStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(validOrders));
 
     // Nettoyer les clients synchronisés
     const customers = offlineStorage.getCustomers();
@@ -146,7 +199,7 @@ export const offlineStorage = {
       }
       return true;
     });
-    localStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(validCustomers));
+    safeLocalStorage.setItem(STORAGE_KEYS.CUSTOMERS, JSON.stringify(validCustomers));
   },
 
   // Synchronisation des données hors connexion
@@ -158,7 +211,7 @@ export const offlineStorage = {
 
   clearAllData: () => {
     Object.values(STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
+      safeLocalStorage.removeItem(key);
     });
   },
 };

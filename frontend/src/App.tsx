@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Login from './pages/Login';
 import { OfflineBanner } from './components/OfflineBanner';
 import { useOfflineSync } from './hooks/useOfflineSync';
@@ -35,7 +35,7 @@ export default function App() {
   const [isQuickModeOpen, setIsQuickModeOpen] = useState(false);
 
   // Configuration des raccourcis clavier
-  useKeyboardShortcuts([
+  const shortcuts = useMemo(() => [
     {
       key: 'l',
       ctrl: true,
@@ -53,7 +53,9 @@ export default function App() {
       action: () => setIsQuickModeOpen(true),
       description: 'Mode rapide',
     },
-  ]);
+  ], [theme, changeTheme]);
+
+  useKeyboardShortcuts(shortcuts);
 
   useEffect(() => {
     // Restaurer la session utilisateur si disponible
@@ -66,11 +68,11 @@ export default function App() {
     initTracking();
   }, [initTracking]);
 
-  const handleLogin = (userRole: string, sessionData: any) => {
+  const handleLogin = (userRole: string) => {
     setRole(userRole);
     offlineStorage.saveUserSession({
-      ...sessionData,
       role: userRole,
+      timestamp: new Date().toISOString(),
     });
   };
 

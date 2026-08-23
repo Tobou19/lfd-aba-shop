@@ -106,5 +106,25 @@ export default defineConfig({
       },
     }),
   ],
-  server: { port: 5173 },
+  server: { 
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending request to the target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received response from the target:', proxyRes.statusCode, req.url);
+          });
+        },
+      },
+    },
+  },
 });

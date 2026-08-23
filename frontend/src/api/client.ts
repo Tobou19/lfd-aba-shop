@@ -1,18 +1,31 @@
 const API_BASE = import.meta.env.VITE_API_BASE ?? '/api/v1';
 
+console.log('API_BASE configuré:', API_BASE);
+
 let accessToken: string | null = null;
 
 export function setAccessToken(token: string | null) {
   accessToken = token;
+  console.log('Access token défini:', token ? '***' : 'null');
 }
 
 export async function apiFetch(path: string, options: RequestInit = {}, forceOnline = false) {
   const isOnline = navigator.onLine;
+  const fullUrl = `${API_BASE}${path}`;
+  
+  console.log('API Fetch:', {
+    url: fullUrl,
+    method: options.method || 'GET',
+    isOnline,
+    hasToken: !!accessToken,
+  });
   
   // En mode hors connexion, essayer le cache local
   if (!isOnline && !forceOnline) {
+    console.log('Mode hors connexion - tentative cache');
     const cachedData = getFromCache(path);
     if (cachedData) {
+      console.log('Données trouvées dans le cache');
       return cachedData;
     }
     
@@ -25,7 +38,7 @@ export async function apiFetch(path: string, options: RequestInit = {}, forceOnl
   }
 
   try {
-    const res = await fetch(`${API_BASE}${path}`, {
+    const res = await fetch(fullUrl, {
       ...options,
       credentials: 'include',
       headers: {
@@ -35,12 +48,20 @@ export async function apiFetch(path: string, options: RequestInit = {}, forceOnl
       },
     });
     
+    console.log('Réponse API:', {
+      status: res.status,
+      ok: res.ok,
+      statusText: res.statusText,
+    });
+    
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
+      console.error('Erreur API:', err);
       throw new Error(err.message || `Erreur API (${res.status})`);
     }
     
     const data = await res.json();
+    console.log('Données reçues:', data);
     
     // Mettre en cache les données GET
     if (!options.method || options.method === 'GET') {
@@ -49,10 +70,13 @@ export async function apiFetch(path: string, options: RequestInit = {}, forceOnl
     
     return data;
   } catch (error) {
+    console.error('Erreur fetch:', error);
+    
     // En cas d'erreur réseau, essayer le cache
     if (!forceOnline) {
       const cachedData = getFromCache(path);
       if (cachedData) {
+        console.log('Utilisation du cache après erreur');
         return cachedData;
       }
     }
