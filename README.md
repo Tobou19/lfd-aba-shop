@@ -27,13 +27,23 @@ L'application est maintenant configurée comme **Progressive Web App (PWA)** ave
 
 ### 🎯 Nouvelles Fonctionnalités UX (Gratuites)
 - **Mode sombre/clair automatique**: Change selon l'heure système (6h-18h = clair)
-- **Raccourcis clavier**: Ctrl+K (recherche), Ctrl+L (thème), Escape (fermer)
+- **Raccourcis clavier**: Ctrl+K (recherche), Ctrl+L (thème), Ctrl+Q (mode rapide), Escape (fermer)
 - **Recherche globale**: Ctrl+K pour rechercher produits, clients, centres
 - **Tooltips contextuels**: Aide intégrée pour chaque élément
 - **Tutorial d'onboarding**: Guide interactif au premier lancement
 - **Statistiques d'utilisation**: Tracking local des appels au système
 - **Responsive mobile**: Interface optimisée pour smartphones/tablettes
 - **Préférences utilisateur**: Personnalisation de l'expérience
+
+### ⚡ Nouvelles Fonctionnalités Productivité (Gratuites)
+- **Système de favoris**: Marquer produits, clients et centres comme favoris avec bouton étoile
+- **Historique des actions récentes**: Tracking automatique des dernières actions avec déduplication
+- **Templates de commandes**: Modèles prédéfinis pour commandes fréquentes (repas hebdomadaires/mensuels)
+- **Calculatrice intégrée**: Calculatrice complète avec pourcentage, backspace et opérations de base
+- **Mode rapide**: Ctrl+Q pour accéder rapidement aux tâches courantes avec recherche
+- **Notifications locales**: Système de notifications avec support navigateur et compteur non-lus
+- **Notes rapides**: Système de notes colorées avec recherche et édition
+- **Multi-session**: Support de sessions multiples avec tracking par appareil
 
 ### 📱 Mode Hors Connexion
 - **Cache API**: 5 minutes pour les requêtes API
