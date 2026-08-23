@@ -3,14 +3,15 @@ import Login from './pages/Login';
 import { OfflineBanner } from './components/OfflineBanner';
 import { useOfflineSync } from './hooks/useOfflineSync';
 import { offlineStorage } from './utils/offlineStorage';
-import { useTheme } from './hooks/useTheme';
 import { ThemeToggle } from './components/ThemeToggle';
 import { KeyboardShortcutsHelp } from './components/KeyboardShortcutsHelp';
 import { GlobalSearch } from './components/GlobalSearch';
 import { OnboardingTutorial } from './components/OnboardingTutorial';
-import { useUsageStats } from './hooks/useUsageStats';
+import { UsageStats } from './components/UsageStats';
+import { useUsageStats as useUsageStatsHook } from './hooks/useUsageStats';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useUserPreferences } from './hooks/useUserPreferences';
+import { useTheme } from './hooks/useTheme';
 import './styles/theme.css';
 import './styles/responsive.css';
 import './styles/responsive.css';
@@ -22,7 +23,7 @@ export default function App() {
   const [role, setRole] = useState<string | null>(null);
   const { isOnline, syncStatus, pendingItems } = useOfflineSync();
   const { theme, effectiveTheme, changeTheme } = useTheme();
-  const { initTracking } = useUsageStats();
+  const { initTracking } = useUsageStatsHook();
   const { getPreferences } = useUserPreferences();
 
   // Configuration des raccourcis clavier
@@ -207,6 +208,8 @@ export default function App() {
                   </label>
                 </div>
               </div>
+
+              <UsageStats />
             </div>
           </div>
         </div>
