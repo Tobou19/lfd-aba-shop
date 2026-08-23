@@ -1,0 +1,122 @@
+/* Responsive Design Styles */
+
+/* Mobile First Approach */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px !important;
+  }
+
+  .header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .header-actions {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+
+  .button {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .card {
+    padding: 12px !important;
+  }
+
+  /* Navigation mobile en bas */
+  .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface-color);
+    border-top: 1px solid var(--border-color);
+    padding: 12px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--primary-color);
+  }
+
+  .mobile-nav-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* Touch-friendly targets for mobile */
+@media (max-width: 768px) {
+  button, .button, a {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+
+  input, select {
+    min-height: 44px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Orientation changes */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header {
+    padding: 8px !important;
+  }
+
+  .card {
+    padding: 12px !important;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Optimized images for retina displays */
+  .logo {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}

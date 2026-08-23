@@ -15,7 +15,7 @@ frontend/   React + Vite + PWA — installable sur Android et iPhone sans store
 
 ## 🚀 Nouveautés PWA & Mode Hors Connexion
 
-L'application est maintenant configurée comme **Progressive Web App (PWA)** avec support complet du mode hors connexion :
+L'application est maintenant configurée comme **Progressive Web App (PWA)** avec support complet du mode hors connexion et de nombreuses améliorations UX gratuites :
 
 ### ✨ Fonctionnalités PWA
 - **Installation**: Installable sur mobile (Android/iOS) et desktop
@@ -24,6 +24,16 @@ L'application est maintenant configurée comme **Progressive Web App (PWA)** ave
 - **Synchronisation**: Données synchronisées automatiquement lors de la reconnexion
 - **Performance**: Temps de chargement optimisé avec cache agressif
 - **Bannière de statut**: Indicateur visuel de l'état de connexion
+
+### 🎯 Nouvelles Fonctionnalités UX (Gratuites)
+- **Mode sombre/clair automatique**: Change selon l'heure système (6h-18h = clair)
+- **Raccourcis clavier**: Ctrl+K (recherche), Ctrl+L (thème), Escape (fermer)
+- **Recherche globale**: Ctrl+K pour rechercher produits, clients, centres
+- **Tooltips contextuels**: Aide intégrée pour chaque élément
+- **Tutorial d'onboarding**: Guide interactif au premier lancement
+- **Statistiques d'utilisation**: Tracking local des appels au système
+- **Responsive mobile**: Interface optimisée pour smartphones/tablettes
+- **Préférences utilisateur**: Personnalisation de l'expérience
 
 ### 📱 Mode Hors Connexion
 - **Cache API**: 5 minutes pour les requêtes API
@@ -273,3 +283,4 @@ persistante, à ouvrir directement dans un navigateur).
 - `USER_GUIDE.md` - Guide d'utilisation complet pour les utilisateurs finaux
 - `DEPLOYMENT_GUIDE.md` - Guide de déploiement pour les développeurs
 - Guide PWA dans ce README pour les fonctionnalités hors connexion
+- Guide UX dans ce README pour les nouvelles fonctionnalités gratuites
