@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { ReceiptsController } from './receipts.controller';
+import { ReceiptsService } from './receipts.service';
+import { PrismaService } from '../prisma.service';
+import { PdfModule } from '../pdf/pdf.module';
+import { StorageModule } from '../storage/storage.module';
+
+@Module({
+  imports: [PdfModule, StorageModule],
+  controllers: [ReceiptsController],
+  providers: [ReceiptsService, PrismaService],
+})
+export class ReceiptsModule {}
