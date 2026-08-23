@@ -13,6 +13,31 @@ backend/    NestJS + Prisma + PostgreSQL — API REST versionnée (/api/v1)
 frontend/   React + Vite + PWA — installable sur Android et iPhone sans store
 ```
 
+## 🚀 Nouveautés PWA & Mode Hors Connexion
+
+L'application est maintenant configurée comme **Progressive Web App (PWA)** avec support complet du mode hors connexion :
+
+### ✨ Fonctionnalités PWA
+- **Installation**: Installable sur mobile (Android/iOS) et desktop
+- **Mode hors connexion**: Fonctionnement complet sans connexion internet
+- **Cache automatique**: Données mises en cache intelligemment
+- **Synchronisation**: Données synchronisées automatiquement lors de la reconnexion
+- **Performance**: Temps de chargement optimisé avec cache agressif
+- **Bannière de statut**: Indicateur visuel de l'état de connexion
+
+### 📱 Mode Hors Connexion
+- **Cache API**: 5 minutes pour les requêtes API
+- **Cache images**: 30 jours
+- **Cache polices**: 1 an
+- **Cache ressources statiques**: 24h
+- **Données essentielles**: Centres (7 jours), Produits (24h)
+- **Synchronisation automatique**: Clients et commandes mis en file d'attente
+
+### 🎯 Utilisation
+- Consultez `USER_GUIDE.md` pour le guide d'utilisation complet
+- Consultez `DEPLOYMENT_GUIDE.md` pour le guide de déploiement
+- L'application fonctionne sur: http://localhost:5173 (dev) ou http://localhost:4173 (build)
+
 ## Démarrage rapide
 
 ### Backend
@@ -39,6 +64,12 @@ enregistrements existants.
 cd frontend
 npm install
 npm run dev
+```
+
+Pour tester le build PWA :
+```
+npm run build
+npm run preview
 ```
 
 ## Modules implémentés (les dix du périmètre MVP + extensions V1/V2)
@@ -236,3 +267,9 @@ paiement mobile money), `SECURITY.md` pour la restriction d'accès,
 `prototypes/application-offline.html` pour l'application fonctionnelle
 complète des trois rôles (fichier unique, base de données locale
 persistante, à ouvrir directement dans un navigateur).
+
+## 📚 Documentation Additionnelle
+
+- `USER_GUIDE.md` - Guide d'utilisation complet pour les utilisateurs finaux
+- `DEPLOYMENT_GUIDE.md` - Guide de déploiement pour les développeurs
+- Guide PWA dans ce README pour les fonctionnalités hors connexion
