@@ -12,6 +12,10 @@ import { useUsageStats as useUsageStatsHook } from './hooks/useUsageStats';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useUserPreferences } from './hooks/useUserPreferences';
 import { useTheme } from './hooks/useTheme';
+import { QuickMode } from './components/QuickMode';
+import { useFavorites } from './hooks/useFavorites';
+import { useRecentActions } from './hooks/useRecentActions';
+import { useLocalNotifications } from './hooks/useLocalNotifications';
 import './styles/theme.css';
 import './styles/responsive.css';
 import './styles/responsive.css';
@@ -25,6 +29,9 @@ export default function App() {
   const { theme, effectiveTheme, changeTheme } = useTheme();
   const { initTracking } = useUsageStatsHook();
   const { getPreferences } = useUserPreferences();
+  const { getFavorites } = useFavorites();
+  const { unreadCount } = useLocalNotifications();
+  const [isQuickModeOpen, setIsQuickModeOpen] = useState(false);
 
   // Configuration des raccourcis clavier
   useKeyboardShortcuts([
@@ -38,6 +45,12 @@ export default function App() {
         changeTheme(themes[nextIndex]);
       },
       description: 'Changer de thème',
+    },
+    {
+      key: 'q',
+      ctrl: true,
+      action: () => setIsQuickModeOpen(true),
+      description: 'Mode rapide',
     },
   ]);
 
@@ -71,6 +84,7 @@ export default function App() {
     <>
       <OnboardingTutorial />
       <GlobalSearch />
+      <QuickMode isOpen={isQuickModeOpen} onClose={() => setIsQuickModeOpen(false)} />
       <OfflineBanner />
       {!role ? (
         <Login onLoggedIn={handleLogin} />
@@ -101,8 +115,57 @@ export default function App() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setIsQuickModeOpen(true)}
+                style={{
+                  padding: '8px 12px',
+                  backgroundColor: '#FF9800',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+                title="Mode rapide (Ctrl+Q)"
+              >
+                <span>⚡</span>
+                <span>Rapide</span>
+              </button>
               <ThemeToggle />
               <KeyboardShortcutsHelp />
+              {unreadCount > 0 && (
+                <div style={{ 
+                  backgroundColor: '#f44336', 
+                  color: 'white', 
+                  padding: '8px 12px', 
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}>
+                  <span>🔔</span>
+                  <span>{unreadCount}</span>
+                </div>
+              )}
+              {getFavorites().length > 0 && (
+                <div style={{ 
+                  backgroundColor: '#FFD700', 
+                  color: '#333', 
+                  padding: '8px 12px', 
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}>
+                  <span>⭐</span>
+                  <span>{getFavorites().length}</span>
+                </div>
+              )}
               {pendingItems.orders.length > 0 || pendingItems.customers.length > 0 ? (
                 <div style={{ 
                   backgroundColor: '#FF9800', 
