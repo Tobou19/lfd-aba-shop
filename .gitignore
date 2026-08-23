@@ -7,3 +7,8 @@ backend/storage/
 backend/prisma/*.db
 *.log
 frontend/icons/*.png
+# Ignore PNG/JPG versions of brand images (user will add their own)
+frontend/public/images/*.png
+frontend/public/images/*.jpg
+# But keep SVG placeholders
+!frontend/public/images/*.svg

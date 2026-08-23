@@ -16,6 +16,8 @@ import { QuickMode } from './components/QuickMode';
 import { useFavorites } from './hooks/useFavorites';
 import { useRecentActions } from './hooks/useRecentActions';
 import { useLocalNotifications } from './hooks/useLocalNotifications';
+import { BrandHeader } from './components/BrandHeader';
+import { BrandAssets } from './components/BrandAssets';
 import './styles/theme.css';
 import './styles/responsive.css';
 
@@ -86,7 +88,21 @@ export default function App() {
       <QuickMode isOpen={isQuickModeOpen} onClose={() => setIsQuickModeOpen(false)} />
       <OfflineBanner />
       {!role ? (
-        <Login onLoggedIn={handleLogin} />
+        <div style={{ 
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          padding: '20px',
+          backgroundColor: 'var(--background-color)',
+        }}>
+          <BrandHeader />
+          <div style={{ marginTop: '32px', width: '100%', maxWidth: '400px' }}>
+            <Login onLoggedIn={handleLogin} />
+          </div>
+          <BrandAssets showQRCode={true} showCenterPhoto={false} />
+        </div>
       ) : (
         <div style={{ 
           padding: '20px',
@@ -96,6 +112,7 @@ export default function App() {
           color: 'var(--text-color)',
           minHeight: '100vh',
         }}>
+          <BrandHeader />
           <div style={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
@@ -272,6 +289,10 @@ export default function App() {
               </div>
 
               <UsageStats />
+            </div>
+
+            <div style={{ marginTop: '32px' }}>
+              <BrandAssets showQRCode={true} showCenterPhoto={true} />
             </div>
           </div>
         </div>

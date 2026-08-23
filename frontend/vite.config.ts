@@ -10,7 +10,14 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/icon-192.svg', 'icons/icon-512.svg'],
+      includeAssets: [
+        'favicon.svg', 
+        'icons/icon-192.svg', 
+        'icons/icon-512.svg',
+        'images/lfd-logo.png',
+        'images/qr-code-shop.png',
+        'images/center-photo.jpg',
+      ],
       manifest: {
         name: 'LFD-Services · ABA SHOP',
         short_name: 'ABA SHOP',
