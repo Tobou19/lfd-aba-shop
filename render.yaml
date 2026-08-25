@@ -1,0 +1,37 @@
+# Render Configuration File
+# Ce fichier automatise la configuration du déploiement sur Render
+
+services:
+  # Backend Service
+  - type: web
+    name: lfd-aba-shop-backend
+    runtime: node
+    plan: free
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lfd-aba-shop-db
+          property: connectionString
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://lfd-aba-shop.vercel.app
+      - key: STORAGE_DRIVER
+        value: local
+      - key: STORAGE_LOCAL_ROOT
+        value: ./storage
+      - key: STORAGE_PUBLIC_BASE_URL
+        value: /files
+
+databases:
+  # PostgreSQL Database
+  - name: lfd-aba-shop-db
+    databaseName: lfd_aba_shop
+    user: lfd_user
+    plan: free
