@@ -39,9 +39,10 @@ async function main() {
   // premier déploiement, en particulier le compte Direction.
   const utilisateursData = [
     {
-      nomComplet: 'Direction CMB',
-      email: 'direction@lfd-services.com',
-      motDePasse: 'ChangezMoiDirection123!',
+      nomComplet: 'Toboudjila Yan Xavier',
+      email: 'toboudjilayanxavier@gmail.com',
+      telephone: '688758020',
+      motDePasse: 'X@vier1st',
       role: 'DIRECTION' as const,
       centreNoms: Object.keys(centres), // accès à tous les centres
     },
