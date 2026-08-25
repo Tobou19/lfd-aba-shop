@@ -39,7 +39,7 @@ async function main() {
   // premier déploiement, en particulier le compte Direction.
   const utilisateursData = [
     {
-      nomComplet: 'Toboudjila Yan Xavier',
+      nomComplet: 'Tobou Djila Yan Xavier',
       email: 'toboudjilayanxavier@gmail.com',
       telephone: '688758020',
       motDePasse: 'X@vier1st',
