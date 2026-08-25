@@ -288,9 +288,9 @@ Si `lfd-aba-shop.eu.org` n'est pas disponible, essayez:
 
 ### 5.2 Tester la Connexion
 
-1. Utilisez les identifiants de démo:
-   - Email: `direction@lfd-services.com`
-   - Mot de passe: `ChangezMoiDirection123!`
+1. Utilisez les identifiants personnels:
+   - Email: `toboudjilayanxavier@gmail.com`
+   - Mot de passe: `X@vier1st`
 2. Cliquez sur "Se connecter"
 3. Vérifiez:
    - ✅ La connexion réussit

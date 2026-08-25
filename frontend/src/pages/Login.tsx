@@ -239,7 +239,7 @@ export default function Login({ onLoggedIn }: { onLoggedIn: (role: string) => vo
               <input
                 value={identifiant}
                 onChange={(e) => setIdentifiant(e.target.value)}
-                placeholder="direction@lfd-services.com"
+                placeholder="toboudjilayanxavier@gmail.com"
                 style={{
                   width: '100%',
                   padding: '16px 20px 16px 52px',
