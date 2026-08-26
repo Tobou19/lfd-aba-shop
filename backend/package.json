@@ -24,6 +24,7 @@
     "@nestjs/platform-express": "^10.4.0",
     "@nestjs/throttler": "^6.2.1",
     "@prisma/client": "^5.20.0",
+    "@supabase/supabase-js": "^2.45.4",
     "bcrypt": "^5.1.1",
     "bwip-js": "^4.5.1",
     "class-transformer": "^0.5.1",
